@@ -16,8 +16,8 @@
 //* Required GLSL version
 #version 330 core
 
+//* 'in' 'type' 'variableName';
 //* Input vertex attributes
-//* in type nameIn;
 in vec3 vertexPosition;
 in vec2 vertexTexCoord;
 in vec3 vertexNormal;
@@ -26,7 +26,7 @@ in vec4 vertexColor;
 //* Input uniform (const?) values
 uniform mat4 mvp;
 
-//* Output vertex attributes (to fragment shader)
+//* Output vertex attributes (TO FRAGMENT SHADER)
 //* out type nameOut;
 out vec2 fragTexCoord;
 out vec4 fragColor;
@@ -41,7 +41,5 @@ void main()
 
     //* Reqired
     //* Calculate final vertex position
-    gl_POSITION_ = mvp*vec4(vertexPosition, 1.0);
+    gl_Position = mvp * vec4(vertexPosition, 1.0);
 }
-
-// vim: set filetype=vert :

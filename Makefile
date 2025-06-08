@@ -421,6 +421,7 @@ analyze:
 		--template=gcc \
 		-I include/ \
 		-I src/ \
+		-i lib/
 		src/
 
 ### Build binary with current config
