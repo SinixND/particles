@@ -4,7 +4,18 @@
 #include "Particle.h"
 #include "ThreadPool.h"
 
-int constexpr PARTICLE_COUNT{ 100000 };
+int constexpr PARTICLE_COUNT{ 10000 };
+float constexpr MULTIPLIER{ 1000 };
+float constexpr FRICTION{ 0.995 };
+
+enum class State
+{
+    SINGLE_CORE,
+    GPU,
+#if !defined( EMSCRIPTEN )
+    MULTITHREAD,
+#endif
+};
 
 class Simulation
 {
@@ -13,15 +24,32 @@ class Simulation
 #endif
 
 public:
-    // std::array<Particle, PARTICLE_COUNT> particles{};
-    std::vector<Particle> particles{ PARTICLE_COUNT };
+    Particle particles[PARTICLE_COUNT];
+
+    //* Shader stuff
+    Shader shader{};
+    unsigned int vao, vbo;
+
+    //* Set to desired computation method
+    State state{ State::GPU };
 
 public:
     void init();
     void update( float dt );
-    void update_multithreaded( float dt );
-    void update_gpu( float dt );
     void deinit();
+
+    void updateGPU( float dt );
+
+private:
+    void updateSingleCore(
+        Particle particlesArray[],
+        int screenWidth,
+        int screenHeight,
+        Vector2 mousePosition,
+        float dt
+    );
+
+    void updateMultithreaded( float dt );
 };
 
 #endif

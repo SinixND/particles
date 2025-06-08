@@ -89,9 +89,25 @@ void App::render()
 
     DrawFPS( 0, 0 );
 
-    for ( Particle const& particle : simulation.particles )
+    switch ( simulation.state )
     {
-        ParticleSystem::drawParticle( particle );
+        default:
+        case State::SINGLE_CORE:
+        case State::MULTITHREAD:
+        {
+            for ( Particle const& particle : simulation.particles )
+            {
+                ParticleSystem::drawParticle( particle );
+            }
+
+            break;
+        }
+        case State::GPU:
+        {
+            simulation.updateGPU( dt );
+
+            break;
+        }
     }
 
     EndDrawing();
@@ -109,7 +125,6 @@ void updateApp( void* arg )
     app.dt = GetFrameTime();
 
     app.simulation.update( app.dt );
-    // app.simulation.update_multithreaded( app.dt );
 
     app.render();
 }
